@@ -1,7 +1,8 @@
-fastapi
-uvicorn
-sqlalchemy
-pymysql
-python-dotenv
-passlib[bcrypt]
-python-jose
+fastapi # FastAPI framework for building APIs
+uvicorn # ASGI server to run the app
+sqlalchemy # ORM for database interactions
+pymysql # MySQL driver
+python-dotenv # Load environment variables from .env file
+passlib[bcrypt] # Password hashing
+python-jose # JWT authentication
+pydantic # Data validation
