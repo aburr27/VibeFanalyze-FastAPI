@@ -1,4 +1,4 @@
-# Simple prediction logic
+# # Handles simple prediction logic for games
 
 def predict_winner(home_score_avg: float, away_score_avg: float):
     """
@@ -9,4 +9,6 @@ def predict_winner(home_score_avg: float, away_score_avg: float):
     elif away_score_avg > home_score_avg:
         return "Away Team Likely Wins"
     else:
-        return "Even Match"
+        return "Good Game, but TIE!"
+    
+    
