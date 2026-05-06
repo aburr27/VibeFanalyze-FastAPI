@@ -1,5 +1,7 @@
 # Player endpoints
 
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -10,8 +12,8 @@ router = APIRouter(prefix="/players", tags=["Players"])
 
 @router.post("/")
 def create_player(name: str, position: str, team_id: int,
-                  db: Session = Depends(get_db),
-                  user=Depends(get_current_user)):
+                  db: Annotated[Session, Depends(get_db)] = None,
+                  user: Annotated[any, Depends(get_current_user)] = None):
     """
     Create a new player (protected)
     """
@@ -24,14 +26,14 @@ def create_player(name: str, position: str, team_id: int,
     return player
 
 @router.get("/")
-def get_players(db: Session = Depends(get_db)):
+def get_players(db: Annotated[Session, Depends(get_db)] = None):
     """
     Get all players (public)
     """
     return db.query(Player).all()
 
-@router.get("/{player_id}")
-def get_player(player_id: int, db: Session = Depends(get_db)):
+@router.get("/{player_id}", responses={404: {"description": "Player not found"}})
+def get_player(player_id: int, db: Annotated[Session, Depends(get_db)] = None):
     """
     Get a single player by ID
     """

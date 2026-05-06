@@ -1,5 +1,6 @@
 # This file handles authentication endpoints (register + login)
 
+from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -11,8 +12,11 @@ from app.core.security import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.post("/register")
-def register(user_data: UserCreate, db: Session = Depends(get_db)):
+@router.post(
+    "/register",
+    responses={400: {"description": "Email already registered"}},
+)
+def register(user_data: UserCreate, db: Annotated[Session, Depends(get_db)]):
     """
     Registers a new user
     """
@@ -37,8 +41,11 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
 
     return {"message": "User created successfully"}
 
-@router.post("/login")
-def login(user_data: UserLogin, db: Session = Depends(get_db)):
+@router.post(
+    "/login",
+    responses={400: {"description": "Invalid credentials"}},
+)
+def login(user_data: UserLogin, db: Annotated[Session, Depends(get_db)]):
     """
     Logs user in and returns JWT token
     """

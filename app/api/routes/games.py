@@ -1,6 +1,7 @@
 # Game endpoints
 
 from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated, Any
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db, get_current_user
@@ -11,8 +12,8 @@ router = APIRouter(prefix="/games", tags=["Games"])
 @router.post("/")
 def create_game(home_team_id: int, away_team_id: int,
                 home_score: int, away_score: int,
-                db: Session = Depends(get_db),
-                user=Depends(get_current_user)):
+                db: Annotated[Session, Depends(get_db)],
+                _user: Annotated[Any, Depends(get_current_user)]):
     """
     Create a game (protected)
     """
@@ -30,14 +31,14 @@ def create_game(home_team_id: int, away_team_id: int,
     return game
 
 @router.get("/")
-def get_games(db: Session = Depends(get_db)):
+def get_games(db: Annotated[Session, Depends(get_db)]):
     """
     Get all games
     """
     return db.query(Game).all()
 
-@router.get("/{game_id}")
-def get_game(game_id: int, db: Session = Depends(get_db)):
+@router.get("/{game_id}", responses={404: {"description": "Game not found"}})
+def get_game(game_id: int, db: Annotated[Session, Depends(get_db)]):
     """
     Get game by ID
     """
